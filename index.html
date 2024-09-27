@@ -7,9 +7,27 @@
     <h1 style="font-size:60px;" >My Best Fully AI-generated Chat</h1>
       <h2>Method: OpenAI API</h2>
         <h3>Initial prompt/message/instruction</h3>
-          <p>Empty string: message=[role:"user", content:""]</p>
+          <p>Empty string: messages = [{"role": "user", "content": ""}]</p>
         <h3>Completions</h3>
           <p>Number of completions: 100.</p>
+        <h3>Code</h3>
+          <pre>
+
+          from openai import OpenAI
+
+          MODEL = "gpt-4o-2024-08-06"
+          #MODEL = "gpt-4o-mini"
+          #MODEL = "gpt-3.5-turbo"
+
+          messages = [{"role": "user", "content": ""}]
+
+          client = OpenAI()
+          completion = client.chat.completions.create(
+            messages = messages,
+            model = MODEL,
+            n = 100
+            )
+          </pre>
         <h3>Eval methods</h3>
           <h4>First</h4>
           <h4>First alphabetically</h4>
