@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <title>My Best Fully AI-generated Chat</title>
+    <title>My Best Fully <abbr title="Artificial Intelligence">AI</abbr>-generated Chat</title>
   </head>
-  <body>
-    <h1 style="font-size:60px;" >My Best Fully AI-generated Chat</h1>
+  <body style="background-color:tomato;font-family:courier;font-size:100%;text-align:center;">
+    <h1 style="text-align:center;font-family:verdana;color:blue;background-color:powderblue;font-size:300%;" >My Best Fully AI-generated Chat</h1>
       <h2>Method: OpenAI API</h2>
         <h3>Initial prompt/message/instruction</h3>
-          <p>Empty string: messages = [{"role": "user", "content": ""}]</p>
+          <p><i>Empty string</i>: messages = [{"role": "user", "content": ""}]</p>
         <h3>Completions</h3>
           <p>Number of completions: 100.</p>
         <h3>Code</h3>
           <pre>
 
-          from openai import OpenAI
+from openai import OpenAI
 
-          MODEL = "gpt-4o-2024-08-06"
-          #MODEL = "gpt-4o-mini"
-          #MODEL = "gpt-3.5-turbo"
+MODEL = "gpt-4o-2024-08-06"
+#MODEL = "gpt-4o-mini"
+#MODEL = "gpt-3.5-turbo"
 
-          messages = [{"role": "user", "content": ""}]
+messages = [{"role": "user", "content": ""}]
 
-          client = OpenAI()
-          completion = client.chat.completions.create(
-            messages = messages,
-            model = MODEL,
-            n = 100
-            )
+client = OpenAI()
+completion = client.chat.completions.create(
+  messages = messages,
+  model = MODEL,
+  n = 100
+  )
           </pre>
         <h3>Eval methods</h3>
           <h4>First</h4>
           <h4>First alphabetically</h4>
           <h4>Best</h4>
-            <p>Best of n, n = 100.<br>Evaluated by me.</p>
+            <p><i>Best of n</i>, n = 100.<br>Evaluated by me.</p>
             <h5>Criteria</h5>
               <h6>Importance</h6>
           <h4>Common</h4>
         <h3>Repeat</h3>
           <p>Eval -> chosen completion, chosen completion = new message.<br>Repeat.</p> 
         <h3>Tested models</h3> 
-          <p style="color:red;">Gpt3.5, gpt4o, gpt4-mini.<br>The best result is by gpt3.5</p>
+          <p style="color:red;"><b><abbr title="Generative Pretrained Transformer">Gpt</abbr>3.5, gpt4o, gpt4-mini.<br>The best result is by <em>gpt3.5</em></b></p>
       <h2>Results</h2>
-        <p><a href="https://techcrunch.com/">TechCrunch</a></p>
+        <h3><a href="https://techcrunch.com/"><strong>TechCrunch</strong></a></h3>
+        <p><q>Some popular tech blogs to follow include TechCrunch, Mashable, Wired, Gizmodo, and The Verge.</q></p>
         <img src="tc-logo.svg" alt="TechCrunch Logo" width="59" height="30">
+        <blockquote>Some popular tech blogs to follow include TechCrunch, Mashable, Wired, Gizmodo, and The Verge. Additionally, subscribing to newsletters from industry leaders such as Google, Apple, Microsoft, and IBM can provide valuable insights into upcoming technologies and trends.\n\nNetworking with industry professionals through conferences, meetups, and online forums can also help you stay informed about the latest developments in technology. Building relationships with others in the tech industry can lead to collaborations, partnerships, and opportunities to learn from their expertise.\n\nFurthermore, being willing to experiment with new technologies and tools can help you stay ahead of the curve and adapt to changes in the market. This may involve attending workshops, taking online courses, or participating in hackathons to expand your skill set and stay current with emerging trends.\n\nIn today's rapidly changing technological landscape, embracing change and being open to new ideas is essential for success. By remaining informed, adaptable, and forward-thinking, individuals and businesses can position themselves as leaders in an ever-evolving digital world.</blockquote>
+        <h3><a href="https://x.com/"><strong>Twitter</strong></a></h3>
+        <p><q>Stay connected with the tech world by following influential thought leaders on social media platforms such as Twitter, LinkedIn, and Medium.</q></p>
+        <blockquote>Stay connected with the tech world by following influential thought leaders on social media platforms such as Twitter, LinkedIn, and Medium. These individuals often share insights, industry news, and trends that can help you stay up to date with the latest developments.\n\nIn addition, subscribing to podcasts and webinars focused on technology can provide valuable educational content and discussions on cutting-edge topics. Platforms like TED Talks, Tech Podcasts, and YouTube channels dedicated to tech reviews and discussions can be great resources for staying informed.\n\nLastly, consider joining online communities and forums related to technology, such as Reddit's technology and programming subreddits, or industry-specific groups on platforms like Facebook and LinkedIn. Engaging with these communities can provide opportunities to network, learn from others, and share insights and experiences in the tech space.</blockquote>
+        <h4><a href="https://x.com/timoreilly"><strong>Tim O'Reilly</strong></a></h4>
+        <blockquote>\n\nSome prominent thought leaders in the tech industry that you may consider following on social media include:\n\n1. Tim O'Reilly (@timoreilly) - Founder of O'Reilly Media\n2. Marques Brownlee (@MKBHD) - Tech YouTuber and reviewer\n3. Kara Swisher (@karaswisher) - Co-founder of Recode\n4. Satya Nadella (@satyanadella) - CEO of Microsoft\n5. Susan Wojcicki (@SusanWojcicki) - CEO of YouTube\n6. Jeff Bezos (@JeffBezos) - Founder and former CEO of Amazon\n7. Sundar Pichai (@sundarpichai) - CEO of Google\n8. Mary Meeker (@marymeeker) - Former partner at Kleiner Perkins and founder of Bond Capital\n\nBy following these thought leaders and engaging with their content, you can stay informed and connected to the latest trends and developments in the tech industry.</blockquote>
         <hr>
     <table title="My Best Fully AI-generated Chat">
       <thead>
