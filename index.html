@@ -2,14 +2,189 @@
 <html lang="en-US">
   <head>
     <title>My Best Fully <abbr title="Artificial Intelligence">AI</abbr>-generated Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      body {
+        background-color: lightblue;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100% 100%;
+      }
+      h1 {
+        color: maroon;
+        background-color: inherit;
+        /* margin-left: 40px;*/
+        text-align: center;
+        font-family: verdana;
+        font-size: 300%;
+        border:0px solid dodgerblue;
+        margin: 0 0 50px 0;
+      }
+      h2 {
+        margin: 20px 0 0 0;
+      }
+      p {
+        color: /*red*/blue;
+        background-color:yellow;
+        font-family: verdana;
+        font-size: 20px;
+        border: 2px solid powderblue;
+        padding: 30px;
+        text-align: center;
+        border-style: dotted solid;
+        margin-top: 100px;
+        margin-bottom: 100px;
+        margin-right: 150px;
+        margin-left: 80px;
+      }
+      
+      #para1 {  /* Set top fieldset color to red */
+        text-align: center;
+        color: red;
+      }
+      p.dotted {border-style: dotted;outline-style: dotted;}
+      p.dashed {border-style: dashed;outline-style: dashed;}
+      p.solid {border-style: solid;outline-style: solid;}
+      p.double {border-style: double;outline-style: double;}
+      p.groove {border-style: groove;outline-style: groove;}
+      p.ridge {border-style: ridge;outline-style: ridge;}
+      p.inset {border-style: inset;outline-style: inset;}
+      p.outset {border-style: outset;outline-style: outset;}
+      p.none {border-style: none;}
+      p.hidden {border-style: hidden;}
+      p.mix {border-style: dotted dashed solid double;}
+
+      p.one {
+  border-style: solid;
+  border-width: 5px;
+  border-color: red;
+}
+
+p.two {
+  border-style: solid;
+  border-width: medium;
+  border-color: green;
+}
+
+p.three {
+  border-style: dotted;
+  border-width: 2px;
+  border-color: blue;
+}
+
+p.four {
+  border-style: dotted;
+  border-width: thick;
+}
+
+      /* This is a multi-line comment 
+      .center {
+        text-align: center;
+        color: red;
+      }
+      p.center {
+        text-align: center;
+        color: red;
+      }*/
+      table {
+        border: 2px solid powderblue;
+      }
+      a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: red;
+}
+div {
+  background: rgba(0, 128, 0, 0.3); /* Green background with 30% opacity */
+  padding: 25px 50px 75px 100px;
+  height: 200px;
+  width: 50%;
+  background-color: powderblue;
+  border: 15px solid green;
+  margin: 20px;
+}
+th, td {
+  border: 1px dotted black;
+  border-radius: 10px;
+  border-color: #96D4D4;
+  padding: 15px;
+}
+th, td {
+  background-color: #96D4D4;
+}
+th {
+  text-align: left;
+}
+    </style>
+    
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
-  <body style="background-color:tomato;font-family:courier;font-size:100%;text-align:center;">
-    <h1 style="text-align:center;font-family:verdana;color:blue;background-color:powderblue;font-size:300%;" >My Best Fully AI-generated Chat</h1>
+
+  <body>
+    <h1>My Best Fully AI-generated Chat</h1>
+    <a href="#T">Jump to Chat</a>
+
+    <fieldset>
+      <legend id="para1">Fieldset</legend>
+
+    <form action="/action_page.php" target="_blank" method="post" autocomplete="on" novalidate>
+      <label for="fname">Input:</label><br>
+      <input type="text" id="fname" name="fname" value=""><br>
+      <label for="lname">Input:</label><br>
+      <input type="text" id="lname" name="lname" value=""><br><br>
+    </fieldset> 
+    
+   
+    <fieldset>
+      <legend class="center">Fieldset</legend>
+  <input type="radio" id="html" name="fav_language" value="HTML">
+  <label for="html">Input</label><br>
+  <input type="radio" id="css" name="fav_language" value="CSS">
+  <label for="css">Input</label><br>
+  <input type="radio" id="javascript" name="fav_language" value="JavaScript">
+  <label for="javascript">Input</label>
+    </fieldset>
+
+    <fieldset>
+      <legend class="center">Fieldset</legend>
+  <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+  <label for="vehicle1"> Input</label><br>
+  <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+  <label for="vehicle2"> Input</label><br>
+  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+  <label for="vehicle3"> Input</label>
+  </fieldset>
+
+  <fieldset>
+    <legend class="center">Fieldset</legend>
+  <label for="cars">Select:</label>
+<select class="center" id="cars" name="cars" size="4" multiple>
+  <option value="volvo" selected>Option</option>
+  <option value="saab">Option</option>
+  <option value="fiat">Option</option>
+  <option value="audi">Option</option>
+</select>
+</fieldset>
+
+<textarea name="message" style="width:100%; height:600px;">
+  </textarea>
+  <button type="button" onclick="alert('Hello World!')">Click Me!</button>
+  <input type="submit" value="Submit">
+
+    </form>
+
       <h2>Method: OpenAI API</h2>
         <h3>Initial prompt/message/instruction</h3>
-          <p><i>Empty string</i>: messages = [{"role": "user", "content": ""}]</p>
+          <p class="dotted one"><i>Empty string</i>: messages = [{"role": "user", "content": ""}]</p>
         <h3>Completions</h3>
-          <p>Number of completions: 100.</p>
+          <p class="dashed two">Number of completions: 100.</p>
         <h3>Code</h3>
           <pre>
 
@@ -32,14 +207,14 @@ completion = client.chat.completions.create(
           <h4>First</h4>
           <h4>First alphabetically</h4>
           <h4>Best</h4>
-            <p><i>Best of n</i>, n = 100.<br>Evaluated by me.</p>
+            <p class="solid three"><i>Best of n</i>, n = 100.<br>Evaluated by me.</p>
             <h5>Criteria</h5>
               <h6>Importance</h6>
           <h4>Common</h4>
         <h3>Repeat</h3>
-          <p>Eval -> chosen completion, chosen completion = new message.<br>Repeat.</p> 
+          <p class="double four">Eval -> chosen completion, chosen completion = new message.<br>Repeat.</p> 
         <h3>Tested models</h3> 
-          <p style="color:red;"><b><abbr title="Generative Pretrained Transformer">Gpt</abbr>3.5, gpt4o, gpt4-mini.<br>The best result is by <em>gpt3.5</em></b></p>
+          <p class="center large groove"><b><abbr title="Generative Pretrained Transformer">Gpt</abbr>3.5, gpt4o, gpt4-mini.<br>The best result is by <em>gpt3.5</em></b></p>
       <h2>Results</h2>
         <h3><a href="https://techcrunch.com/"><strong>TechCrunch</strong></a></h3>
         <p><q>Some popular tech blogs to follow include TechCrunch, Mashable, Wired, Gizmodo, and The Verge.</q></p>
@@ -49,11 +224,29 @@ completion = client.chat.completions.create(
         <p><q>Stay connected with the tech world by following influential thought leaders on social media platforms such as Twitter, LinkedIn, and Medium.</q></p>
         <blockquote>Stay connected with the tech world by following influential thought leaders on social media platforms such as Twitter, LinkedIn, and Medium. These individuals often share insights, industry news, and trends that can help you stay up to date with the latest developments.\n\nIn addition, subscribing to podcasts and webinars focused on technology can provide valuable educational content and discussions on cutting-edge topics. Platforms like TED Talks, Tech Podcasts, and YouTube channels dedicated to tech reviews and discussions can be great resources for staying informed.\n\nLastly, consider joining online communities and forums related to technology, such as Reddit's technology and programming subreddits, or industry-specific groups on platforms like Facebook and LinkedIn. Engaging with these communities can provide opportunities to network, learn from others, and share insights and experiences in the tech space.</blockquote>
         <h4><a href="https://x.com/timoreilly"><strong>Tim O'Reilly</strong></a></h4>
-        <blockquote>\n\nSome prominent thought leaders in the tech industry that you may consider following on social media include:\n\n1. Tim O'Reilly (@timoreilly) - Founder of O'Reilly Media\n2. Marques Brownlee (@MKBHD) - Tech YouTuber and reviewer\n3. Kara Swisher (@karaswisher) - Co-founder of Recode\n4. Satya Nadella (@satyanadella) - CEO of Microsoft\n5. Susan Wojcicki (@SusanWojcicki) - CEO of YouTube\n6. Jeff Bezos (@JeffBezos) - Founder and former CEO of Amazon\n7. Sundar Pichai (@sundarpichai) - CEO of Google\n8. Mary Meeker (@marymeeker) - Former partner at Kleiner Perkins and founder of Bond Capital\n\nBy following these thought leaders and engaging with their content, you can stay informed and connected to the latest trends and developments in the tech industry.</blockquote>
+        <blockquote>Some prominent thought leaders in the tech industry that you may consider following on social media include:
+          <ol>
+            <li>Tim O'Reilly (@timoreilly) - Founder of O'Reilly Media</li>
+            <li>Marques Brownlee (@MKBHD) - Tech YouTuber and reviewer</li>
+            <li>Kara Swisher (@karaswisher) - Co-founder of Recode</li>
+            <li>Satya Nadella (@satyanadella) - CEO of Microsoft</li>
+            <li>Susan Wojcicki (@SusanWojcicki) - CEO of YouTube</li>
+            <li>Jeff Bezos (@JeffBezos) - Founder and former CEO of Amazon</li>
+            <li>Sundar Pichai (@sundarpichai) - CEO of Google</li>
+            <li>Mary Meeker (@marymeeker) - Former partner at Kleiner Perkins and founder of Bond Capital</li>
+          </ol>
+            By following these thought leaders and engaging with their content, you can stay informed and connected to the latest trends and developments in the tech industry.</blockquote>
+          
+        <h3><a href="https://www.w3schools.com/"><strong>W3Schools</strong></a></h3>
+        <h3><a href="https://www.w3.org/"><strong>W3C</strong></a></h3>
+        <h3><a href="https://www.google.com/"><strong>Google</strong></a></h3>
+        <h3><a href="html_images.html"><strong>HTML Images</strong></a></h3>
         <hr>
-    <table title="My Best Fully AI-generated Chat">
+
+    <table style="width:100%" id="T" title="My Best Fully AI-generated Chat">
+      <caption>My Best Fully AI-generated Chat</caption>
       <thead>
-        <tr style="text-align: right;">
+        <tr style="text-align: right;height:200px;">
           <th></th>
           <th>Response</th>
           <th>Eval</th>
@@ -150,3 +343,5 @@ completion = client.chat.completions.create(
     </table>
 </body>
 </html>
+
+<!-- background-image: url('pic_trulli.jpg') Archive here -->
