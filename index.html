@@ -1,7 +1,355 @@
-<!DOCTYPE html>
-<html>
-  <head></head>
-  <body>
-    <a href="https://docs.google.com/document/d/1-W4oUt1cUsYDTJNM52eQ4lGGJ6nZ3EAVAqZdFUQBPAg/edit?usp=sharing">Math Buddy</a>
-  </body>
+
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Definice: AGI & Superintelligence</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --fg-hover: #1a73e8;
+      --border: #dddddd;
+      --card: #f9f9f9;
+      --card-hover: #f1f1f1;
+      --outerwide-scale: 3;
+      --wide-scale: 2.5;
+      --photo-scale: 1;
+      --transformer-scale: 1;
+      --deepnet-scale: 1;
+      --leaflet-scale: 1;
+      --globe-scale: 1;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      display: block;
+      scroll-snap-type: y proximity;
+    }
+
+    main { width: 100%; max-width: 1400px; margin: 0 auto; }
+
+    .defs-wrapper {
+      min-height: 100vh;
+      display: grid;
+      align-content: center;
+      gap: 3rem;
+      padding: 6vh 2vw 10vh;
+      scroll-snap-align: start;
+    }
+
+    .def { border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem 2rem; background-color: var(--card); transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .def:hover, .def:focus-within { background-color: var(--card-hover); border-color: #cfd3d8; box-shadow: 0 6px 18px rgba(0,0,0,.06); transform: translateY(-2px); }
+    .term { font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2; white-space: nowrap; transition: color .2s ease; }
+    .def:hover .term, .def:focus-within .term { color: var(--fg-hover); }
+
+    .ai-section { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; place-items: center; gap: 1.25rem; padding: 6vh 2vw; scroll-snap-align: start; opacity: 0; transform: translateY(24px) scale(.98); transition: opacity .9s ease, transform .9s ease; }
+    .ai-section.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+    .ai-figure { width: min(1100px, 96vw); height: 80vh; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); display: grid; place-items: center; overflow: hidden; position: relative; }
+
+    .ai-layer { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 50%; transition: opacity .35s ease, transform .3s ease; will-change: opacity, transform; }
+
+    /* Z-index pořadí: globe(0) < leaflet(1) < outerwide(2) < wide(3) < photo(4) < transformer(5) < deepnet(6) */
+    .ai-globe { z-index: 0; opacity: 0; transform: scale(var(--globe-scale)); background: #000 url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/North_America_from_low_orbiting_satellite_Suomi_NPP.jpg/1024px-North_America_from_low_orbiting_satellite_Suomi_NPP.jpg') center/contain no-repeat; }
+
+    .ai-leaflet { z-index: 1; opacity: 0; transform: scale(var(--leaflet-scale)); background: #e5e7eb; }
+    #leafletMap { width: 100%; height: 100%; }
+    .leaflet-container { font: inherit; }
+
+    .ai-outerwide { z-index: 2; background-image: url('https://images.ctfassets.net/kftzwdyauwt9/4xr6uwep8z7k2zV7SBBP4A/89f640504c1b915691b6fa9edeb7fa25/IMG_1628.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center; opacity: 0; transform: scale(var(--outerwide-scale)); }
+    .ai-wide { z-index: 3; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Datacenter_de_ARSAT.jpg/1280px-Datacenter_de_ARSAT.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center; opacity: 0; transform: scale(var(--wide-scale)); }
+    .ai-photo { z-index: 4; background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/74/Servers_in_a_Rack.jpg'); background-repeat: no-repeat; background-size: cover; background-position: 50% 56%; opacity: 1; transform: scale(var(--photo-scale)); }
+    .ai-transformer { z-index: 5; background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Full_GPT_architecture.svg'); background-repeat: no-repeat; background-size: contain; background-position: center; background-color: #fff; opacity: 0; transform: scale(var(--transformer-scale)); }
+    .ai-deepnet { z-index: 6; display: grid; place-items: center; background: #fff; opacity: 0; transform: scale(var(--deepnet-scale)); }
+    .ai-deepnet svg { width: 95%; height: auto; max-height: 95%; }
+
+    .zoom-controls { display: grid; grid-auto-flow: column; gap: 1.25rem; }
+    .zoom-btn { padding: .55rem 1rem; border-radius: .9rem; border: 1px solid var(--border); background: var(--card); cursor: pointer; }
+  </style>
+  <!-- three.js + globe.gl pro kulatou Zemi bez tokenu -->
+  
+  <!-- Leaflet CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+  <main>
+    <div class="defs-wrapper">
+      <section class="def"><h1 class="term">AGI = AI generally smarter than humans</h1></section>
+      <section class="def"><h2 class="term">Superintelligence = AI generally much smarter than humans</h2></section>
+    </div>
+
+    <section class="ai-section" aria-label="AI media">
+      <figure class="ai-figure">
+        <div class="ai-layer ai-globe" id="aiGlobe" aria-label="Earth (image)"></div>
+        <div class="ai-layer ai-leaflet" id="aiLeaflet" aria-label="Leaflet Map">
+          <div id="leafletMap"></div>
+        </div>
+        <div class="ai-layer ai-outerwide" id="aiOuterwide" aria-label="Global datacenter exterior"></div>
+        <div class="ai-layer ai-wide" id="aiWide" aria-label="Wide view of datacenter"></div>
+        <div class="ai-layer ai-photo" id="aiPhoto" aria-label="Servers in a rack inside a data center"></div>
+        <div class="ai-layer ai-transformer" id="aiTransformer" aria-label="Full GPT architecture diagram"></div>
+        <div class="ai-layer ai-deepnet" id="aiDeepnet" aria-label="Neural network detail"></div>
+      </figure>
+
+      <div class="zoom-controls" aria-label="Zoom controls">
+        <button type="button" id="zoomIn" class="zoom-btn" aria-label="Zoom in">🔍➕ Zoom in</button>
+        <button type="button" id="zoomOut" class="zoom-btn" aria-label="Zoom out">🔍➖ Zoom out</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Fade-in na scroll
+    const aiSection = document.querySelector('.ai-section');
+    const io = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting) aiSection.classList.add('visible');});},{threshold:0.05});
+    io.observe(aiSection);
+
+    // Vrstvy & pořadí (od nejvíce oddáleného po nejvíce přiblížený)
+    const LAYERS = {
+      globe: document.getElementById('aiGlobe'),
+      leaflet: document.getElementById('aiLeaflet'),
+      outerwide: document.getElementById('aiOuterwide'),
+      wide: document.getElementById('aiWide'),
+      photo: document.getElementById('aiPhoto'),
+      transformer: document.getElementById('aiTransformer'),
+      deepnet: document.getElementById('aiDeepnet')
+    };
+
+    const ORDER = ['globe','leaflet','outerwide','wide','photo','transformer','deepnet'];
+
+    // Limity měřítek
+    const STEP = 0.25;
+    const LIMITS = {
+      globe:      { min: 0.65,  max: 3,    var: '--globe-scale' },
+      leaflet:    { min: 1,    max: 6,    var: '--leaflet-scale' },
+      outerwide:  { min: 1,    max: 3,    var: '--outerwide-scale' },
+      wide:       { min: 1,    max: 2.5,  var: '--wide-scale' },
+      photo:      { min: 0.75, max: 3,    var: '--photo-scale' },
+      transformer:{ min: 1,    max: 2.5,  var: '--transformer-scale' },
+      deepnet:    { min: 2,    max: 12,   var: '--deepnet-scale' }
+    };
+
+    // Stav
+    let mode = 'photo';
+    const scale = { globe: 0.8, leaflet: 6, outerwide: 3, wide: 2.5, photo: 1, transformer: 1, deepnet: 1 };
+
+    // Leaflet map instance & zoom řízení
+    const CENTER = [32.4983463, -99.7881055];
+    let leafletMap = null;
+    const LEAFLET_MIN_Z = 4;   // cca celé USA
+    const LEAFLET_MAX_Z = 19;  // detail
+    let leafletZoom = 18;      // start detail
+
+    function ensureLeaflet(){
+      if (leafletMap) return;
+      const el = document.getElementById('leafletMap');
+      if (!el || !window.L) return; // počkej na knihovnu
+      leafletMap = L.map(el, { zoomControl: false, attributionControl: true }).setView(CENTER, leafletZoom);
+      // Esri World Imagery (satelit) tiles
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+      }).addTo(leafletMap);
+      // Volitelně pin: L.marker(CENTER).addTo(leafletMap);
+    }
+
+    function setLeafletZoom(z){
+      if (!leafletMap) return; // inicializuje se při show('leaflet')
+      const nz = Math.max(LEAFLET_MIN_Z, Math.min(LEAFLET_MAX_Z, z|0));
+      leafletZoom = nz;
+      leafletMap.setZoom(nz);
+    }
+
+    function apply(){
+      for (const key of ORDER){
+        const lim = LIMITS[key];
+        LAYERS[key].style.setProperty(lim.var, scale[key]);
+      }
+    }
+
+    function show(target) {
+      for (const key of ORDER) {
+        const el = LAYERS[key];
+        const on = (key === target);
+        el.style.opacity = on ? '1' : '0';
+        el.style.visibility = on ? 'visible' : 'hidden';
+        el.style.pointerEvents = on ? 'auto' : 'none';
+      }
+      mode = target;
+      
+      if (target === 'leaflet') { ensureLeaflet(); setLeafletZoom(leafletZoom); setTimeout(()=>{ leafletMap && leafletMap.invalidateSize(); }, 50); }
+    }
+
+    function clamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+
+    function nextMode(curr, dir){
+      const i = ORDER.indexOf(curr);
+      const j = clamp(i + dir, 0, ORDER.length-1);
+      return ORDER[j];
+    }
+
+    function atMax(m){ const {max} = LIMITS[m]; return scale[m] >= max - 1e-9; }
+    function atMin(m){ const {min} = LIMITS[m]; return scale[m] <= min + 1e-9; }
+
+    // Symetrický zoom in/out
+    function zoom(dir){
+      const lim = LIMITS[mode];
+      if (mode === 'leaflet' && leafletMap) {
+        // nativní zoom bez reloadu tiles (prohlížečová cache pomůže)
+        setLeafletZoom(leafletZoom + (dir>0 ? +1 : -1));
+      }
+      if (dir > 0) { // zoom in
+        if (!atMax(mode)) {
+          scale[mode] = clamp(scale[mode] + STEP, lim.min, lim.max);
+          apply();
+          if (atMax(mode)) {
+            const nm = nextMode(mode, +1);
+            if (nm !== mode) { show(nm); scale[nm] = LIMITS[nm].min; apply(); if (nm==='deepnet') ensureDeepnet(); }
+          }
+        } else {
+          const nm = nextMode(mode, +1); if (nm!==mode){ show(nm); scale[nm] = LIMITS[nm].min; apply(); if (nm==='deepnet') ensureDeepnet(); }
+        }
+      } else { // zoom out
+        if (!atMin(mode)) {
+          scale[mode] = clamp(scale[mode] - STEP, lim.min, lim.max);
+          apply();
+          if (atMin(mode)) {
+            const pm = nextMode(mode, -1);
+            if (pm !== mode) { show(pm); scale[pm] = LIMITS[pm].max; apply(); }
+          }
+        } else {
+          const pm = nextMode(mode, -1); if (pm!==mode){ show(pm); scale[pm] = LIMITS[pm].max; apply(); }
+        }
+      }
+    }
+
+    // Ovládací tlačítka
+    document.getElementById('zoomIn').addEventListener('click', ()=>zoom(+1));
+    document.getElementById('zoomOut').addEventListener('click', ()=>zoom(-1));
+
+    // SVG pro deepnet
+    function buildDeepNetSVG(LAYERS_CNT=5,NODES=5){
+      const W=800,H=400,mX=60,mY=36;
+      const col=i=>mX+i*((W-2*mX)/(LAYERS_CNT-1));
+      const row=j=>mY+j*((H-2*mY)/(NODES-1));
+      const circles=[],edges=[];
+      for(let i=0;i<LAYERS_CNT;i++){
+        for(let j=0;j<NODES;j++){
+          const r=(i===0||i===LAYERS_CNT-1)?7:6;
+          const fill=(i===0)?'#1f2937':(i===LAYERS_CNT-1?'#16a34a':'#2563eb');
+          circles.push(`<circle cx='${col(i).toFixed(1)}' cy='${row(j).toFixed(1)}' r='${r}' fill='${fill}'/>`);
+        }
+      }
+      for(let i=0;i<LAYERS_CNT-1;i++){
+        for(let j=0;j<NODES;j++){
+          for(let k=0;k<NODES;k++){
+            edges.push(`<line class='edge' x1='${col(i).toFixed(1)}' y1='${row(j).toFixed(1)}' x2='${col(i+1).toFixed(1)}' y2='${row(k).toFixed(1)}'/>`);
+          }
+        }
+      }
+      const midLayer = Math.floor(LAYERS_CNT/2);
+      const midNeuron = Math.floor(NODES/2);
+      const cx = col(midLayer).toFixed(1);
+      const cy = row(midNeuron).toFixed(1);
+      const labels = [];
+      const fontH = 9, lineGap = fontH * 2, lx = (col(midLayer) - 36).toFixed(1);
+      for(let j=0;j<NODES;j++){
+        const ly = (+cy + (j - 2) * lineGap).toFixed(1);
+        labels.push(`<text x='${lx}' y='${ly}' class='wlabel' text-anchor='end' dominant-baseline='middle'>w${j+1}</text>`);
+      }
+      const equation = `<text x='${(+cx+24).toFixed(1)}' y='${(+cy-2).toFixed(1)}' class='equation'>y = σ(Σ wᵢ xᵢ + b)</text>`;
+
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${W} ${H}'>
+  <defs>
+    <style>
+      .edge{ stroke:#cbd5e1; stroke-width:1.25; }
+      #math{ opacity:1; }
+      .wlabel{ fill:#111827; font-size:9px; }
+      .equation{ fill:#111827; font-size:11px; font-weight:600; }
+    </style>
+  </defs>
+  <rect width='100%' height='100%' fill='white'/>
+  <g>${edges.join('')}</g>
+  ${circles.join('')}
+  <g id='math'>
+    <circle cx='${cx}' cy='${cy}' r='10' fill='none' stroke='#111827' stroke-width='1.5'/>
+    ${labels.join('')}
+    ${equation}
+  </g>
+</svg>`;
+    }
+
+    function ensureDeepnet(){
+      if(!LAYERS.deepnet.dataset.ready){
+        LAYERS.deepnet.innerHTML=buildDeepNetSVG(5,5);
+        LAYERS.deepnet.dataset.ready='1';
+      }
+    }
+
+    function ensureGlobe(){
+      if (window._globeReady || window._globeTried) return;
+      window._globeTried = true;
+      const el = document.getElementById('globe');
+      if (!el) return;
+      const tryInit = ()=>{
+        const GlobeCtor = window.Globe;
+        if (!GlobeCtor) { setTimeout(tryInit, 300); return; }
+        try {
+          const g = GlobeCtor({ animateIn: true })(el)
+            .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+            .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundColor('#000000');
+          // Pohled na USA (navazuje na Leaflet)
+          g.pointOfView({ lat: 37, lng: -95, altitude: 1.9 }, 1200);
+          g.atmosphereColor('#88aaff').atmosphereAltitude(0.15);
+          const controls = g.controls();
+          if (controls) { controls.autoRotate = false; controls.enableZoom = false; }
+
+          // Odstraníme fallback až po krátkém zpoždění (dovolí načíst textury)
+          setTimeout(()=>{ LAYERS.globe.classList.remove('fallback'); LAYERS.globe.style.background = 'transparent'; }, 1000);
+          window._globeReady = true;
+        } catch(e){
+          console.warn('Globe init failed, keeping spherical image fallback.', e);
+          LAYERS.globe.classList.add('fallback');
+        }
+      };
+      tryInit();
+    }
+
+    // Preload obrázků (kvůli plynulosti přepínání)
+    [
+      'https://images.ctfassets.net/kftzwdyauwt9/4xr6uwep8z7k2zV7SBBP4A/89f640504c1b915691b6fa9edeb7fa25/IMG_1628.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Datacenter_de_ARSAT.jpg/1280px-Datacenter_de_ARSAT.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/7/74/Servers_in_a_Rack.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/5/51/Full_GPT_architecture.svg',
+      'https://upload.wikimedia.org/wikipedia/commons/4/4e/Earth_Western_Hemisphere_transparent_background.png'
+    ].forEach(src=>{ const i=new Image(); i.decoding='async'; i.referrerPolicy='no-referrer'; i.src=src; });
+
+    // --- Smoke testy pořadí a konfigurace ---
+    (function runSmokeTests(){
+      console.assert(Array.isArray(ORDER) && ORDER.length===7, 'ORDER length should be 7');
+      console.assert(nextMode('outerwide', -1)==='leaflet', 'zoom out z outerwide má vést na leaflet');
+      console.assert(nextMode('leaflet', -1)==='globe', 'zoom out z leaflet má vést na globe');
+      console.assert(typeof LIMITS.leaflet.min==='number' && typeof LIMITS.deepnet.max==='number', 'LIMITS contain leaflet & deepnet');
+      console.assert(typeof show==='function' && typeof zoom==='function', 'Control functions exist');
+      // rychlý sanity test: show('globe') nevyhodí chybu a mód se přepne
+      try { show('globe'); console.assert(mode==='globe','show(globe) sets mode'); } catch(e){ console.error('show(globe) threw', e); }
+      // vrať zpět výchozí režim
+      show('photo');
+    })();
+
+    // Init
+    show('photo');
+    apply();
+  </script>
+</body>
 </html>
