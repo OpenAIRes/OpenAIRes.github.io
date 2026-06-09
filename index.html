@@ -20,6 +20,10 @@
       --deepnet-scale: 1;
       --leaflet-scale: 1;
       --globe-scale: 1;
+      --globe-focus-x: 29%;
+      --globe-focus-y: 25%;
+      --globe-anchor-x: 50%;
+      --globe-anchor-y: 50%;
     }
 
     * { box-sizing: border-box; }
@@ -77,10 +81,18 @@
       background:
         url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg/1280px-Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg')
         center / cover no-repeat;
-      transform-origin: 43% 35%;
-      transform: translate(-43%, -35%) scale(var(--globe-scale));
+      transform-origin: var(--globe-anchor-x) var(--globe-anchor-y);
+      transform:
+        translate(
+          calc(0% - var(--globe-anchor-x)),
+          calc(0% - var(--globe-anchor-y))
+        )
+        scale(var(--globe-scale));
       filter: drop-shadow(0 0 20px rgba(104, 170, 255, .5));
-      transition: transform .3s ease;
+      transition:
+        transform .45s cubic-bezier(.22, .61, .36, 1),
+        transform-origin .45s cubic-bezier(.22, .61, .36, 1);
+      will-change: transform, transform-origin;
     }
     .globe-sphere::before {
       content: "";
@@ -213,6 +225,15 @@
         const lim = LIMITS[key];
         LAYERS[key].style.setProperty(lim.var, scale[key]);
       }
+
+      const globeRange = LIMITS.globe.max - LIMITS.globe.min;
+      const globeProgress = globeRange
+        ? (scale.globe - LIMITS.globe.min) / globeRange
+        : 0;
+      const focusX = 50 + (29 - 50) * globeProgress;
+      const focusY = 50 + (25 - 50) * globeProgress;
+      LAYERS.globe.style.setProperty('--globe-anchor-x', `${focusX}%`);
+      LAYERS.globe.style.setProperty('--globe-anchor-y', `${focusY}%`);
     }
 
     function show(target) {
