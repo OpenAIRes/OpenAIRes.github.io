@@ -58,7 +58,49 @@
     .ai-layer { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 50%; transition: opacity .35s ease, transform .3s ease; will-change: opacity, transform; }
 
     /* Z-index pořadí: globe(0) < leaflet(1) < outerwide(2) < wide(3) < photo(4) < transformer(5) < deepnet(6) */
-    .ai-globe { z-index: 0; opacity: 0; transform: scale(var(--globe-scale)); background: #000 url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/North_America_from_low_orbiting_satellite_Suomi_NPP.jpg/1024px-North_America_from_low_orbiting_satellite_Suomi_NPP.jpg') center/contain no-repeat; }
+    .ai-globe {
+      z-index: 0;
+      opacity: 0;
+      transform: none;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(34, 73, 121, .2), transparent 42%),
+        #02050a;
+    }
+    .globe-sphere {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(72vh, 72vw, 720px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg/1280px-Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg')
+        center / cover no-repeat;
+      transform-origin: 43% 35%;
+      transform: translate(-43%, -35%) scale(var(--globe-scale));
+      filter: drop-shadow(0 0 20px rgba(104, 170, 255, .5));
+      transition: transform .3s ease;
+    }
+    .globe-sphere::before {
+      content: "";
+      position: absolute;
+      inset: 1%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 36% 31%, rgba(255,255,255,.08), transparent 27%),
+        linear-gradient(105deg, transparent 62%, rgba(0,0,0,.16) 82%, rgba(0,0,0,.36) 100%);
+      pointer-events: none;
+    }
+    .globe-sphere::after {
+      content: "";
+      position: absolute;
+      inset: 2%;
+      border: 2px solid rgba(130, 190, 255, .32);
+      border-radius: 50%;
+      box-shadow: 0 0 26px rgba(80, 145, 255, .38);
+      pointer-events: none;
+    }
 
     .ai-leaflet { z-index: 1; opacity: 0; transform: scale(var(--leaflet-scale)); background: #e5e7eb; }
     #leafletMap { width: 100%; height: 100%; }
@@ -74,8 +116,6 @@
     .zoom-controls { display: grid; grid-auto-flow: column; gap: 1.25rem; }
     .zoom-btn { padding: .55rem 1rem; border-radius: .9rem; border: 1px solid var(--border); background: var(--card); cursor: pointer; }
   </style>
-  <!-- three.js + globe.gl pro kulatou Zemi bez tokenu -->
-  
   <!-- Leaflet CSS/JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -89,7 +129,7 @@
 
     <section class="ai-section" aria-label="AI media">
       <figure class="ai-figure">
-        <div class="ai-layer ai-globe" id="aiGlobe" aria-label="Earth (image)"></div>
+        <div class="ai-layer ai-globe" id="aiGlobe" role="img" aria-label="Země z vesmíru"></div>
         <div class="ai-layer ai-leaflet" id="aiLeaflet" aria-label="Leaflet Map">
           <div id="leafletMap"></div>
         </div>
@@ -129,7 +169,7 @@
     // Limity měřítek
     const STEP = 0.25;
     const LIMITS = {
-      globe:      { min: 0.65,  max: 3,    var: '--globe-scale' },
+      globe:      { min: 0.72,  max: 3,    var: '--globe-scale' },
       leaflet:    { min: 1,    max: 6,    var: '--leaflet-scale' },
       outerwide:  { min: 1,    max: 3,    var: '--outerwide-scale' },
       wide:       { min: 1,    max: 2.5,  var: '--wide-scale' },
@@ -140,7 +180,7 @@
 
     // Stav
     let mode = 'photo';
-    const scale = { globe: 0.8, leaflet: 6, outerwide: 3, wide: 2.5, photo: 1, transformer: 1, deepnet: 1 };
+    const scale = { globe: 0.72, leaflet: 6, outerwide: 3, wide: 2.5, photo: 1, transformer: 1, deepnet: 1 };
 
     // Leaflet map instance & zoom řízení
     const CENTER = [32.4983463, -99.7881055];
@@ -185,6 +225,7 @@
       }
       mode = target;
       
+      if (target === 'globe') ensureGlobe();
       if (target === 'leaflet') { ensureLeaflet(); setLeafletZoom(leafletZoom); setTimeout(()=>{ leafletMap && leafletMap.invalidateSize(); }, 50); }
     }
 
@@ -296,33 +337,12 @@
     }
 
     function ensureGlobe(){
-      if (window._globeReady || window._globeTried) return;
-      window._globeTried = true;
-      const el = document.getElementById('globe');
-      if (!el) return;
-      const tryInit = ()=>{
-        const GlobeCtor = window.Globe;
-        if (!GlobeCtor) { setTimeout(tryInit, 300); return; }
-        try {
-          const g = GlobeCtor({ animateIn: true })(el)
-            .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-            .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-            .backgroundColor('#000000');
-          // Pohled na USA (navazuje na Leaflet)
-          g.pointOfView({ lat: 37, lng: -95, altitude: 1.9 }, 1200);
-          g.atmosphereColor('#88aaff').atmosphereAltitude(0.15);
-          const controls = g.controls();
-          if (controls) { controls.autoRotate = false; controls.enableZoom = false; }
-
-          // Odstraníme fallback až po krátkém zpoždění (dovolí načíst textury)
-          setTimeout(()=>{ LAYERS.globe.classList.remove('fallback'); LAYERS.globe.style.background = 'transparent'; }, 1000);
-          window._globeReady = true;
-        } catch(e){
-          console.warn('Globe init failed, keeping spherical image fallback.', e);
-          LAYERS.globe.classList.add('fallback');
-        }
-      };
-      tryInit();
+      if (LAYERS.globe.dataset.ready) return;
+      const sphere = document.createElement('div');
+      sphere.className = 'globe-sphere';
+      sphere.setAttribute('aria-hidden', 'true');
+      LAYERS.globe.appendChild(sphere);
+      LAYERS.globe.dataset.ready = '1';
     }
 
     // Preload obrázků (kvůli plynulosti přepínání)
@@ -331,7 +351,7 @@
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Datacenter_de_ARSAT.jpg/1280px-Datacenter_de_ARSAT.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/7/74/Servers_in_a_Rack.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/5/51/Full_GPT_architecture.svg',
-      'https://upload.wikimedia.org/wikipedia/commons/4/4e/Earth_Western_Hemisphere_transparent_background.png'
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg/1280px-Earth_viewed_by_GOES-16_2023-03-11_1700Z.jpg'
     ].forEach(src=>{ const i=new Image(); i.decoding='async'; i.referrerPolicy='no-referrer'; i.src=src; });
 
     // --- Smoke testy pořadí a konfigurace ---
