@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Definice: AGI & Superintelligence</title>
+  <title>AI: od infrastruktury k superinteligenci</title>
   <style>
     :root {
       --bg: #ffffff;
@@ -40,6 +40,90 @@
 
     main { width: 100%; max-width: 1400px; margin: 0 auto; }
 
+    .presentation-section {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 8vh 4vw;
+      scroll-snap-align: start;
+    }
+
+    .presentation-card {
+      width: min(920px, 100%);
+      min-height: min(560px, 76vh);
+      padding: clamp(2rem, 6vw, 5rem);
+      border: 1px solid #cbd5e1;
+      border-radius: 2rem;
+      color: #fff;
+      text-decoration: none;
+      display: grid;
+      align-content: space-between;
+      gap: 3rem;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(96, 165, 250, .46), transparent 28%),
+        radial-gradient(circle at 12% 86%, rgba(129, 140, 248, .35), transparent 31%),
+        linear-gradient(135deg, #07152e 0%, #123d78 56%, #2563eb 100%);
+      box-shadow: 0 24px 70px rgba(15, 48, 96, .22);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .presentation-card::after {
+      content: "";
+      position: absolute;
+      width: 19rem;
+      aspect-ratio: 16 / 10;
+      right: -3rem;
+      bottom: -2rem;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 1.3rem;
+      background:
+        linear-gradient(rgba(255,255,255,.13), rgba(255,255,255,.06)),
+        repeating-linear-gradient(0deg, transparent 0 2rem, rgba(255,255,255,.08) 2rem 2.05rem);
+      transform: rotate(-7deg);
+      pointer-events: none;
+    }
+
+    .presentation-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .presentation-card:hover,
+    .presentation-card:focus-visible {
+      transform: translateY(-6px);
+      box-shadow: 0 32px 90px rgba(15, 48, 96, .32);
+      outline: none;
+    }
+
+    .presentation-eyebrow {
+      margin: 0;
+      font-size: .82rem;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #bfdbfe;
+    }
+
+    .presentation-title {
+      max-width: 13ch;
+      margin: .8rem 0 0;
+      font-size: clamp(2.8rem, 7vw, 6.5rem);
+      line-height: .95;
+      letter-spacing: -.055em;
+    }
+
+    .presentation-action {
+      width: fit-content;
+      padding: .85rem 1.15rem;
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
     .defs-wrapper {
       min-height: 100vh;
       display: grid;
@@ -51,13 +135,13 @@
 
     .def { border: 1px solid var(--border); border-radius: 1rem; padding: 1.5rem 2rem; background-color: var(--card); transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
     .def:hover, .def:focus-within { background-color: var(--card-hover); border-color: #cfd3d8; box-shadow: 0 6px 18px rgba(0,0,0,.06); transform: translateY(-2px); }
-    .term { font-size: 2.2rem; font-weight: 700; margin: 0; line-height: 1.2; white-space: nowrap; transition: color .2s ease; }
+    .term { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; margin: 0; line-height: 1.2; transition: color .2s ease; }
     .def:hover .term, .def:focus-within .term { color: var(--fg-hover); }
 
     .ai-section { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; place-items: center; gap: 1.25rem; padding: 6vh 2vw; scroll-snap-align: start; opacity: 0; transform: translateY(24px) scale(.98); transition: opacity .9s ease, transform .9s ease; }
     .ai-section.visible { opacity: 1; transform: translateY(0) scale(1); }
 
-    .ai-figure { width: min(1100px, 96vw); height: 80vh; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); display: grid; place-items: center; overflow: hidden; position: relative; }
+    .ai-figure { width: min(1100px, 96vw); height: 80vh; margin: 0; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); display: grid; place-items: center; overflow: hidden; position: relative; }
 
     .ai-layer { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 50%; transition: opacity .35s ease, transform .3s ease; will-change: opacity, transform; }
 
@@ -134,11 +218,6 @@
 </head>
 <body>
   <main>
-    <div class="defs-wrapper">
-      <section class="def"><h1 class="term">AGI = AI generally smarter than humans</h1></section>
-      <section class="def"><h2 class="term">Superintelligence = AI generally much smarter than humans</h2></section>
-    </div>
-
     <section class="ai-section" aria-label="AI media">
       <figure class="ai-figure">
         <div class="ai-layer ai-globe" id="aiGlobe" role="img" aria-label="Země z vesmíru"></div>
@@ -157,6 +236,26 @@
         <button type="button" id="zoomOut" class="zoom-btn" aria-label="Zoom out">🔍➖ Zoom out</button>
       </div>
     </section>
+
+    <section class="presentation-section" aria-labelledby="presentationTitle">
+      <a
+        class="presentation-card"
+        href="https://docs.google.com/presentation/d/1VafSlIuWDUzG7aapLFz8Evm0iVgOxsWsIxm6s87l5L4/edit?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div>
+          <p class="presentation-eyebrow">Google Slides</p>
+          <h1 class="presentation-title" id="presentationTitle">Otevřít prezentaci</h1>
+        </div>
+        <span class="presentation-action">Zobrazit slidy ↗</span>
+      </a>
+    </section>
+
+    <div class="defs-wrapper">
+      <section class="def"><h2 class="term">AGI = AI generally smarter than humans</h2></section>
+      <section class="def"><h2 class="term">Superintelligence = AI generally much smarter than humans</h2></section>
+    </div>
   </main>
 
   <script>
